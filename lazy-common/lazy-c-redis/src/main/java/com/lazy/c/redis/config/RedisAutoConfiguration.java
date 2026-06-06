@@ -17,7 +17,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 
 /**
  * Redis 客户端自动配置
@@ -30,10 +29,6 @@ import org.springframework.context.annotation.Import;
  */
 @EnableCaching
 @AutoConfiguration
-@Import({
-        CaffeineCacheConfig.class,
-        RedissonCacheConfig.class,
-})
 public class RedisAutoConfiguration {
 
     /**
