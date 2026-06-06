@@ -1,0 +1,88 @@
+server:
+  port: 81
+  shutdown: graceful
+
+spring:
+  application:
+    name: lazy-gateway
+  profiles:
+    active: dev
+
+  cache:
+    type: caffeine
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+  cloud:
+    loadbalancer:
+      cache:
+        caffeine:
+          spec: maximumSize=1000,expireAfterWrite=10m
+
+    gateway:
+      server:
+        webflux:
+          default-filters:
+            # 默认过滤器配置：自动合并或去除重复的响应头
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+          # 服务发现配置
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
+          # HTTP客户端配置
+          httpclient:
+            connect-timeout: 5000
+            response-timeout: 2s
+
+          # CORS 跨域配置
+          # 注意：当 allowCredentials: true 时，allowedOriginPatterns 不能使用 "*"
+          global cors:
+            cors-configurations:
+              '[/**]':
+                # 开发环境：允许本地所有端口（生产环境需改为实际前端域名）
+                allowedOriginPatterns:
+                  - "http://localhost:*"
+                  - "http://127.0.0.1:*"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                  - PATCH
+                allowedHeaders: "*"
+                exposedHeaders: "*"
+                allowCredentials: true
+                maxAge: 3600
+
+          # 路由配置 - 这是Gateway的核心
+          routes:
+
+            # 路由0：后台管理系统
+            - id: lazy-admin-route
+              uri: lb://lazy-admin
+              predicates:
+                - Path=/api/admin/**
+
+            # 路由10：404 捕获（已禁用，dev 环境需要访问 Swagger UI）
+            # 如需启用，请取消注释并调整路径匹配规则
+            # - id: 404-route
+            #   uri: ???
+            #   predicates:
+            #     - Path=???
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod

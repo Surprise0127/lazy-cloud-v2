@@ -1,0 +1,38 @@
+# SpringDoc 默认配置
+# 所有引入 lazy-common-doc 的服务都会继承这些默认配置
+springdoc:
+
+  # API 文档路径配置
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+    resolve-schema-properties: true
+
+  # Swagger UI 配置
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    # 默认展开层级
+    doc-expansion: list
+    # 按 HTTP 方法排序（GET → POST → PUT → DELETE）
+    operations-sorter: method
+    # 按字母排序标签
+    tags-sorter: alpha
+    # 显示请求耗时
+    display-request-duration: true
+    # 显示操作ID
+    display-operation-id: true
+    # 默认模型展开深度
+    default-models-expand-depth: 1
+    # 模型默认渲染为 example
+    default-model-rendering: example
+    # 启用过滤搜索框
+    filter: true
+    # 启用 Try it out
+    try-it-out-enabled: false
+    # 持久化 token 到 localStorage
+    persist-authorization: false
+
+  # 包扫描
+  packages-to-scan: com.lazy
+  paths-to-match: /**

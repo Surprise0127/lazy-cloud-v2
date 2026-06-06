@@ -1,0 +1,30 @@
+# Spring Security 默认配置
+# JWT 认证配置
+jwt:
+  # 密钥
+  secret: "10086"
+
+  # 签发者
+  issuer: "lazy-surprise"
+
+  # Access Token 过期时间（秒），默认 2 小时
+  access-token-expire: 7200
+
+  # Refresh Token 过期时间（秒），默认 7 天
+  refresh-token-expire: 604800
+
+  # 忽略鉴权的 URL 白名单
+  ignore-urls:
+    # 文档 api（只在dev环境存在）
+    - /swagger-ui.html
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /webjars/**
+    - /swagger-resources/**
+
+    # ==================== Auth服务公开接口 ====================
+    - /auth/captcha
+    - /auth/login
+    - /auth/login/phone
+    - /auth/sms/send
+    - /auth/refresh
