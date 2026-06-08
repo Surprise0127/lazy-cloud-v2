@@ -19,10 +19,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Redis 客户端自动配置
- * <p>
- * 使用独立的 ObjectMapper（不复用 Web 层的 Jackson 配置），
- * 避免 Long→String 等前端序列化规则污染 Redis 存储。
+ * Redis自动配置类
  *
  * @author Surprise0127
  * @since 1.0.0
