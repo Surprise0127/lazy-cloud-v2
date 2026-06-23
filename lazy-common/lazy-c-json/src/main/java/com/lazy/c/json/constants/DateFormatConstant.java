@@ -3,7 +3,7 @@ package com.lazy.c.json.constants;
 /**
  * 日期格式常量
  * <p>
- * 当前常量目前只应用于json格式化
+ * 当前常量目前只应用于 json 格式化
  *
  * @author Surprise0127
  * @since 1.0.0

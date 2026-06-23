@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * yaml属性源Factory
  * <p>
- * 将 yaml或者yml文件解析为PropertySource
+ * 将 yaml 或者 yml 文件解析为 PropertySource
  *
  * @author Surprise0127
  * @since 1.0.0
