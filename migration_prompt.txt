@@ -1,0 +1,82 @@
+你是一位 Java 架构迁移专家，正在使用 Claude Code + 终端工具执行全量代码重构。
+**最高优先级规则（违者重来）**：
+1. 每完成“阶段一”到“阶段五”中的任意一个，**必须立即暂停**，执行 `mvn clean compile -DskipTests`，并将编译结果截图/报错贴给我。
+2. 只有我说“继续”或“CE”，才能进入下一阶段。禁止自动连续执行多个阶段。
+
+---
+
+#### 全局路径映射（以此为准，不要猜测）
+- 目标模块：`lazy-s-domain`, `lazy-s-application`, `lazy-s-infrastructure`, `lazy-i-security`, `lazy-c-core`。
+- 旧 `lazy-c-core` 中的 `R.java` 和旧 `service` 包全部**物理删除**（无迁移价值）。
+- 旧 `lazy-s-domain/domain/R.java` 和 `BaseEntity.java` 仅保留 `BaseEntity` 并移动到 `lazy-s-domain/domain/shared`。
+
+---
+
+#### 阶段一：地基重构（纯净 BaseEntity + 诞生 BasePO）
+**操作清单**：
+1. 编辑 `lazy-c-core/.../BaseEntity.java`（或你在 `lazy-s-domain` 找到的旧版）：
+   - 删除所有 `@TableId`, `@TableField`, `@Version`, `@TableLogic` 注解。
+   - 类上加 `@Getter @Setter`，保留 `id`, `createTime`, `updateTime`, `delFlag` 字段。
+   - 物理移动该类到 `lazy-s-domain/src/main/java/com/lazy/domain/shared/BaseEntity.java`。
+2. 在 `lazy-s-infrastructure` 模块新建 `persistence/po/BasePO.java`：
+   - `public class BasePO extends BaseEntity { }`
+   - 在字段上重新添加上 MyBatis-Plus 注解：
+     - `@TableId(type = IdType.ASSIGN_ID) private Long id;`
+     - `@TableField(fill = FieldFill.INSERT) private Date createTime;` 等。
+   - 类上加 `@Data` 和 `@TableName(autoResultMap = true)`。
+3. **执行 `mvn clean compile -DskipTests`，待我确认后再继续。**
+
+---
+
+#### 阶段二：聚合根与仓储接口（领域层独立）
+**操作清单**：
+1. 将 `SysUser.java` 和 `SysTenant.java` 移动到 `lazy-s-domain/domain/model`。
+2. **去除这两个类中的所有 MP 注解**。
+3. 让它们继承聚合根基类：`extends AggregateRoot<Long>`（假设框架包为 `com.lazy.framework.ddd`）。
+4. 在 `lazy-s-domain/domain/repository` 包下新建接口：
+   - `ISysUserRepository`（方法：`save(SysUser)`, `Optional<SysUser> findById(Long)`, `Optional<SysUser> findByUsername(String)`）。
+   - `ISysTenantRepository`（方法参照）。
+5. **保留领域服务接口**：`IUserPermissionService` 依然放在 `domain/service`，但将其依赖的 Mapper 改为依赖 `ISysUserRepository`（依赖倒置）。
+6. **执行 `mvn clean compile -DskipTests`，等待确认。**
+
+---
+
+#### 阶段三：基础设施层实现（防腐层）
+**操作清单**：
+1. 将旧的 `SysUserMapper` 和 `SysTenantMapper` 物理移动到 `lazy-s-infrastructure/persistence/mapper`。
+2. 在 `lazy-s-infrastructure/persistence/repository` 下实现仓储：
+   - `SysUserRepositoryImpl implements ISysUserRepository`，注入 `SysUserMapper`。
+   - 转换方法：`SysUserPO po = new SysUserPO(); BeanUtils.copyProperties(domain, po);`（PO 需要继承 BasePO，并显式添加 `@TableName("sys_user")`）。
+   - 实现类加 `@Repository`。
+3. **将 `SysUser` 中的 `tenantId` 字段改为 `Long tenantId`（值对象引用），不要直接持有 `SysTenant` 聚合根。**
+4. **执行 `mvn clean compile -DskipTests`，等待确认。**
+
+---
+
+#### 阶段四：应用层编排（Service 改造）
+**操作清单**：
+1. 把旧的 `SysUserServiceImpl` 和 `SysTenantServiceImpl` **物理移动**到 `lazy-s-application/service` 包。
+2. 将类名改为 `SysUserApplicationService`（或保留原名，但确保包名在 application 层）。
+3. 修改注入逻辑：
+   - 删除对 `SysUserMapper` 的直接注入，改为注入 `ISysUserRepository` 和 `IUserPermissionService`（领域服务）。
+   - 将 `@Transactional` 注解加在实现类的 public 方法上。
+4. 编排代码示例：`userRepository.save(user);` 替换原来的 `mapper.insert(user)`。
+5. **执行 `mvn clean compile -DskipTests`，等待确认。**
+
+---
+
+#### 阶段五：接口与安全适配（收尾）
+**操作清单**：
+1. 修改 `AuthController` 和 `UserController` 的 `@Autowired` 类型，指向新 Application 层的 Service 实现类。
+2. 在 `lazy-i-security` 模块中新建 `SecurityUserAdapter`（实现 `UserDetailsService`）：
+   - 注入 `ISysUserRepository`。
+   - `loadUserByUsername` 返回 `LoginUser`（自定义类），**不要直接返回 `SysUser` 对象**，避免安全框架污染领域。
+3. 删除旧包路径下所有冗余的 `R.java` 和未迁移的旧 Service 接口。
+4. **最终编译** `mvn clean package -DskipTests`，成功后将所有变更提交 `git commit -m "refactor: DDD full migration"`。
+
+---
+
+#### 额外约束（针对 DeepSeek-V4 推理特性）
+- 修改文件时，优先使用 `MultiEdit` 工具批量替换包导入语句（`import old.package...` -> `import new.package...`）。
+- 如果 `BeanUtils.copyProperties` 报错，直接使用 getter/setter 手动赋值，不要引入新的大依赖。
+- 若 `mvn compile` 报错提示类找不到，**立即在报错文件中修正 import 语句**，然后再次尝试编译，直到通过才进入下一阶段。
