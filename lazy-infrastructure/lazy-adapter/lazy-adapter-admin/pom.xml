@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.lazy</groupId>
+        <artifactId>lazy-adapter</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>lazy-admin-adapter</artifactId>
+    <name>lazy-admin-adapter</name>
+    <description>Admin bounded context adapter - controllers, DTOs, repository impls</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.lazy</groupId>
+            <artifactId>lazy-admin</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lazy</groupId>
+            <artifactId>lazy-c-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lazy</groupId>
+            <artifactId>lazy-c-mybatis</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lazy</groupId>
+            <artifactId>lazy-c-web</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
