@@ -60,4 +60,29 @@ public class SysTenant extends AggregateRoot<Long> {
      */
     private String description;
 
+    // ==================== 业务方法 ====================
+
+    /**
+     * 激活租户
+     */
+    public void activate() {
+        this.status = 1;
+    }
+
+    /**
+     * 禁用租户
+     */
+    public void disable() {
+        this.status = 0;
+    }
+
+    /**
+     * 判断租户是否正常
+     *
+     * @return true=正常可用
+     */
+    public boolean isActive() {
+        return this.status != null && this.status == 1;
+    }
+
 }

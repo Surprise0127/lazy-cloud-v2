@@ -8,7 +8,7 @@ import com.lazy.infra.security.handler.AccessDeniedHandlerImpl;
 import com.lazy.infra.security.handler.CertifiedFailedHandlerImpl;
 import com.lazy.infra.security.service.TokenBlacklistService;
 import com.lazy.infra.security.util.JwtUtils;
-import com.lazy.admin.service.IUserPermissionService;
+import com.lazy.shared.service.IUserPermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -96,8 +96,7 @@ public class SecurityAutoConfiguration {
     /**
      * 用户权限加载服务（领域服务适配）
      * <p>
-     * 默认空实现，业务模块可通过实现 {@link IUserPermissionService} 并注入
-     * {@link com.lazy.admin.port.outgoing.ISysUserRepository} 来覆盖此 Bean。
+     * 默认空实现，业务模块可通过实现 {@link IUserPermissionService} 来覆盖此 Bean。
      *
      * @return IUserPermissionService 默认实现
      */

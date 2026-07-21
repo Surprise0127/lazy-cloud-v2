@@ -3,7 +3,7 @@ package com.lazy.infra.security.filter;
 import com.lazy.infra.security.domain.LoginUser;
 import com.lazy.infra.security.service.TokenBlacklistService;
 import com.lazy.infra.security.util.JwtUtils;
-import com.lazy.admin.service.IUserPermissionService;
+import com.lazy.shared.service.IUserPermissionService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

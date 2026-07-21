@@ -70,4 +70,45 @@ public class SysUser extends AggregateRoot<Long> {
      */
     private String avatar;
 
+    // ==================== 业务方法 ====================
+
+    /**
+     * 激活账号
+     */
+    public void activate() {
+        this.status = 1;
+    }
+
+    /**
+     * 禁用账号
+     */
+    public void disable() {
+        this.status = 0;
+    }
+
+    /**
+     * 锁定账号
+     */
+    public void lock() {
+        this.status = 2;
+    }
+
+    /**
+     * 判断账号是否正常
+     *
+     * @return true=正常可用
+     */
+    public boolean isActive() {
+        return this.status != null && this.status == 1;
+    }
+
+    /**
+     * 修改密码（传入已加密的密码）
+     *
+     * @param encodedPassword 加密后的密码
+     */
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
 }

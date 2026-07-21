@@ -22,23 +22,22 @@
         </dependency>
         <dependency>
             <groupId>com.lazy</groupId>
-            <artifactId>lazy-c-core</artifactId>
+            <artifactId>lazy-common-core</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>com.lazy</groupId>
-            <artifactId>lazy-c-security</artifactId>
+            <artifactId>lazy-common-security</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>com.lazy</groupId>
-            <artifactId>lazy-c-web</artifactId>
+            <artifactId>lazy-common-web</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
