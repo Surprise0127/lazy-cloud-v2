@@ -2,7 +2,7 @@
 # JWT 认证配置
 jwt:
   # 密钥
-  secret: "10086"
+  secret: apcpx3mlnfW6pSpxB0lGtPl0cNMwvH5Z
 
   # 签发者
   issuer: "lazy-surprise"

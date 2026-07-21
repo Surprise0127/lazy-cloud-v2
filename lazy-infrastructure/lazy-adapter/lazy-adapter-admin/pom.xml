@@ -10,7 +10,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>lazy-admin-adapter</artifactId>
+    <artifactId>lazy-adapter-admin</artifactId>
     <name>lazy-admin-adapter</name>
     <description>Admin bounded context adapter - controllers, DTOs, repository impls</description>
 

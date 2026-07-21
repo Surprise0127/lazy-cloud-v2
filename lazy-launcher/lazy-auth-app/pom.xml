@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.lazy</groupId>
-            <artifactId>lazy-auth-adapter</artifactId>
+            <artifactId>lazy-adapter-auth</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>

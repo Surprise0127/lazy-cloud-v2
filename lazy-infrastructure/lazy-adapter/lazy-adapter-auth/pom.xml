@@ -10,7 +10,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>lazy-auth-adapter</artifactId>
+    <artifactId>lazy-adapter-auth</artifactId>
     <name>lazy-auth-adapter</name>
     <description>Auth bounded context adapter - controllers, DTOs, repository impls, security adapter</description>
 
