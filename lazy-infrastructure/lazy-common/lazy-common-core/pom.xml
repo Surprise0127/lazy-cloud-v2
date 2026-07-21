@@ -8,7 +8,6 @@
         <groupId>com.lazy</groupId>
         <artifactId>lazy-common</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>lazy-common-core</artifactId>
